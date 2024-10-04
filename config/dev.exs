@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :bike_shop, BikeShop.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "bike_shop_dev",
+  username: System.get_env("POSTGRES_USER"),
+  password: System.get_env("POSTGRES_PASSWORD"),
+  hostname: "db",
+  database: System.get_env("POSTGRES_DB"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -19,11 +19,11 @@ config :bike_shop, BikeShop.Repo,
 config :bike_shop, BikeShopWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "QP20PQnO+dwjmIDColjmcrYO2ghj5YHMKmuhuIE7UyCk45DWIustV3NsQXRg2TMN",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:bike_shop, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:bike_shop, ~w(--watch)]}

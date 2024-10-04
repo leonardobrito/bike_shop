@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  phoenix_app:
+    build: .
+    container_name: phoenix_app
+    environment:
+      MIX_ENV: dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bike_shop_dev
+      DATABASE_URL: ecto://postgres:postgres@db/bike_shop_dev
+      SECRET_KEY_BASE: "QP20PQnO+dwjmIDColjmcrYO2ghj5YHMKmuhuIE7UyCk45DWIustV3NsQXRg2TMN"
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - deps_data:/app/deps
+      - node_modules:/app/assets/node_modules
+    command: sh -c "mix ecto.create && mix phx.server"
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:14-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: my_app_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+  deps_data:
+  node_modules:
